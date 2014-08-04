@@ -21,7 +21,7 @@
       K    :: term(),
       V    :: term().
 is_valid(leaf) ->
-  true;
+    true;
 is_valid({tree, [Key|_], Left, Right}) ->
     lists:all(
       [

@@ -23,33 +23,33 @@
       V    :: term().
 is_valid(leaf) ->
     true;
-is_valid({tree, Dist, [Key|_], Left, Right}) ->
+is_valid({tree, Height, [Key|_], Left, Right}) ->
     lists:all(
       [
-       Dist == dist(Right) + 1,
+       Height == height(Right) + 1,
        is_valid(Left),
        is_valid(Right),
        iterator:all(fun([K|_]) -> K >= Key end, iter(Left)),
        iterator:all(fun([K|_]) -> K >= Key end, iter(Right)),
-       dist(Left) >= dist(Right)
+       height(Left) >= height(Right)
       ]).
 
 
-dist(leaf) ->
+height(leaf) ->
     0;
-dist({tree, Dist, _, _, _}) ->
-    Dist.
+height({tree, Height, _, _, _}) ->
+    Height.
 
 
 make_tree(Elem, Tree1, Tree2) ->
-    Dist1 = dist(Tree1),
-    Dist2 = dist(Tree2),
+    Height1 = height(Tree1),
+    Height2 = height(Tree2),
 
-    case Dist1 >= Dist2 of
+    case Height1 >= Height2 of
         true ->
-            {tree, Dist2+1, Elem, Tree1, Tree2};
+            {tree, Height2+1, Elem, Tree1, Tree2};
         false ->
-            {tree, Dist1+1, Elem, Tree2, Tree1}
+            {tree, Height1+1, Elem, Tree2, Tree1}
     end.
 
 
