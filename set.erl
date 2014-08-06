@@ -77,5 +77,6 @@ test(Mod) ->
 
 test() ->
     test(bst),
-    test(avltree),
+    test(avl_tree),
+    test(redblack_tree),
     ok.

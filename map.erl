@@ -131,5 +131,5 @@ test(Mod) ->
 
 test() ->
     test(bst),
-    test(avltree),
+    test(avl_tree),
     ok.

@@ -1,4 +1,4 @@
--module(avltree).
+-module(avl_tree).
 
 -export(
    [
@@ -13,7 +13,7 @@
 
 
 -type tree(K, V) :: 'leaf'
-                  | {'tree', pos_integer(), [K|V], tree(K,V), tree(K,V)}.
+                  | {'tree', pos_integer(), nonempty_maybe_improper_list(K,V), tree(K,V), tree(K,V)}.
 
 
 -spec is_valid(Tree) -> boolean() when
@@ -85,10 +85,7 @@ make_tree(Elem, Tree1, Tree2) ->
 
 
 
--spec empty() -> Tree when
-      Tree :: tree(K,V),
-      K    :: term(),
-      V    :: term().
+-spec empty() -> 'leaf'.
 empty() ->
     leaf.
 
@@ -106,7 +103,7 @@ is_empty(_) ->
 -spec lookup(Key, Tree) -> 'none' | {'value', Elem} when
       Key  :: K,
       Tree :: tree(K,V),
-      Elem :: [K|V],
+      Elem :: nonempty_maybe_improper_list(K,V),
       K    :: term(),
       V    :: term().
 lookup(_, leaf) ->
@@ -123,7 +120,7 @@ lookup(Key, {tree, _, [KN|_], _, Bigger})
 
 
 -spec enter(Elem, Tree1) -> {Op, Tree2} when
-      Elem  :: [K|V],
+      Elem  :: nonempty_maybe_improper_list(K,V),
       Tree1 :: tree(K,V),
       Tree2 :: tree(K,V),
       Op    :: 'insert' | 'update',

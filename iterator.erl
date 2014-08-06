@@ -24,7 +24,7 @@
 -type iterator(T) :: fun(() -> stream(T)).
 
 
--spec empty() -> stream(_).
+-spec empty() -> 'nil'.
 empty() ->
     nil.
 
