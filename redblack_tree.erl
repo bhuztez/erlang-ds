@@ -148,7 +148,7 @@ make_tree(Color, Node, Smaller, Bigger) ->
       K     :: term(),
       V     :: term().
 enter(Elem, Tree) ->
-    case enter_inner(Elem, Tree) of
+    case enter_aux(Elem, Tree) of
         {update, Tree1} ->
             {update, Tree1};
         {insert, {tree, red, Elem1, Smaller, Bigger}} ->
@@ -157,22 +157,22 @@ enter(Elem, Tree) ->
             {insert, Tree1}
     end.
 
-enter_inner(Elem, leaf) ->
+enter_aux(Elem, leaf) ->
     {insert, {tree, red, Elem, leaf, leaf}};
-enter_inner([Key|_]=Elem, {tree, Color, [KN|_], Smaller, Bigger})
+enter_aux([Key|_]=Elem, {tree, Color, [KN|_], Smaller, Bigger})
   when Key == KN ->
     {update, {tree, Color, Elem, Smaller, Bigger}};
-enter_inner([Key|_]=Elem, {tree, Color, [KN|_]=Node, Smaller, Bigger})
+enter_aux([Key|_]=Elem, {tree, Color, [KN|_]=Node, Smaller, Bigger})
   when Key < KN ->
-    case enter_inner(Elem, Smaller) of
+    case enter_aux(Elem, Smaller) of
         {update, Smaller1} ->
             {update, {tree, Color, Node, Smaller1, Bigger}};
         {insert, Smaller1} ->
             {insert, make_tree(Color, Node, Smaller1, Bigger)}
     end;
-enter_inner([Key|_]=Elem, {tree, Color, [KN|_]=Node, Smaller, Bigger})
+enter_aux([Key|_]=Elem, {tree, Color, [KN|_]=Node, Smaller, Bigger})
   when Key > KN ->
-    case enter_inner(Elem, Bigger) of
+    case enter_aux(Elem, Bigger) of
         {update, Bigger1} ->
             {update, {tree, Color, Node, Smaller, Bigger1}};
         {insert, Bigger1} ->
@@ -236,7 +236,7 @@ pop_max({tree, Color, Node, Smaller, Bigger}) ->
       K     :: term(),
       V     :: term().
 delete(Key, Tree) ->
-    case delete_inner(Key, Tree) of
+    case delete_aux(Key, Tree) of
         not_found ->
             not_found;
         {deleted, double_black} ->
@@ -248,22 +248,22 @@ delete(Key, Tree) ->
     end.
 
 
-delete_inner(_, leaf) ->
+delete_aux(_, leaf) ->
     not_found;
-delete_inner(Key, {tree, _, [KN|_], _, _}=Tree)
+delete_aux(Key, {tree, _, [KN|_], _, _}=Tree)
   when Key == KN ->
     {deleted, remove(Tree)};
-delete_inner(Key, {tree, Color, [KN|_]=Node, Smaller, Bigger})
+delete_aux(Key, {tree, Color, [KN|_]=Node, Smaller, Bigger})
   when Key < KN ->
-    case delete_inner(Key, Smaller) of
+    case delete_aux(Key, Smaller) of
         not_found ->
             not_found;
         {deleted, Smaller1} ->
             {deleted, bubble(Color, Node, Smaller1, Bigger)}
     end;
-delete_inner(Key, {tree, Color, [KN|_]=Node, Smaller, Bigger})
+delete_aux(Key, {tree, Color, [KN|_]=Node, Smaller, Bigger})
   when Key > KN ->
-    case delete_inner(Key, Bigger) of
+    case delete_aux(Key, Bigger) of
         not_found ->
             not_found;
         {deleted, Bigger1} ->
